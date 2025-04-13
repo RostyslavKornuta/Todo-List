@@ -10,10 +10,16 @@ export const theme = createTheme({
         }
     },
     components: {
+        MuiContainer: {
+            styleOverrides: {
+                root: {
+                    padding: '0 !important'
+                }
+            }
+        },
         MuiIconButton: {
             styleOverrides: {
                 root: {
-                    // padding: '8px'
                 }
             }
         },
