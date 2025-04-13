@@ -1,20 +1,51 @@
 import TodoItem, {Todo} from "./todo-item";
 import {Button, Container, FormControl, TextField} from "@mui/material";
 import {useState} from "react";
-import * as yup from 'yup'
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import styled from "styled-components";
 
-type TodoFields = {
-    title: string,
-    description?: string
-}
+type TodoForm = Pick<Todo, 'title' | 'description'>;
+
+const schema = yup.object().shape({
+    title: yup.string().trim().required('This field is required'),
+    description: yup.string().trim()
+})
+
+const Wrapper = styled(Container)`
+    height: calc(100vh - 400px);
+    width: 600px !important;
+    margin: 200px auto;
+    padding: 16px;
+    border: 1px solid #3C4146;
+    border-radius: 8px
+`;
+
+const Todos = styled(Container)`
+  height: calc(100% - 102px);
+  margin-top: 16px;
+  padding-right: 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+export const TodoFields = styled(Container)`
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+`;
+
+const TodoForm = styled(FormControl)`
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px
+`;
 
 const TodoList = () => {
-    const schema: yup.ObjectSchema<TodoFields> = yup.object().shape({
-        title: yup.string().trim().required('This field is required'),
-        description: yup.string().trim()
-    })
     const [todos, setTodos] = useState<Array<Todo>>([{
         id: 0,
         title: 'First Todo',
@@ -26,12 +57,11 @@ const TodoList = () => {
         handleSubmit,
         reset,
         formState: {errors}
-    } = useForm<TodoFields>({
+    } = useForm<TodoForm>({
         resolver: yupResolver(schema)
     })
 
-    const onAddClick = (data: TodoFields) => {
-
+    const onAddClick = (data: Todo) => {
         const newTodo: Todo = {
             id: todos.length,
             title: data.title,
@@ -43,54 +73,36 @@ const TodoList = () => {
         reset()
     }
 
-    const onEdit = (updatedTodo: Todo, title: string, description: string) => setTodos(todos => todos.map(todo => todo === updatedTodo ? {
+    const onEdit = (id: number, title: string, description: string) => setTodos(todos => todos.map(todo => todo.id === id ? {
         ...todo,
         title: title,
         description: description
     } : todo))
 
-    const onFavorite = (updatedTodo: Todo, isFavorite: boolean) => setTodos(todos => todos.map(todo => todo === updatedTodo ? {
+    const onFavorite = (id: number) => setTodos(todos => todos.map(todo => todo.id === id ? {
         ...todo,
-        isFavorite
+        isFavorite: !todo.isFavorite
     } : todo))
 
-    const onDelete = (updatedTodo: Todo) => setTodos(todos => todos.filter(todo => todo.id !== updatedTodo.id))
+    const onDelete = (id: number) => setTodos(todos => todos.filter(todo => todo.id !== id))
 
     return (
-        <Container sx={{
-            height: 'calc(100vh - 400px)',
-            width: '600px',
-            margin: '200px auto',
-            padding: '16px !important',
-            border: '1px solid #3C4146',
-            borderRadius: '8px'
-        }}>
-            <FormControl onSubmit={handleSubmit(onAddClick)} sx={{display: 'flex', flexDirection: 'row', gap: '8px'}}>
-                <Container sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px'
-                }}>
-                    <TextField error={!!errors.title?.message} helperText={errors.title?.message} {...register('title')} placeholder="Write there a new future task"/>
-                    <TextField {...register('description')} placeholder="Write there a description for new future task"/>
-                </Container>
+        <Wrapper>
+            <TodoForm onSubmit={handleSubmit(onAddClick)}>
+                <TodoFields>
+                    <TextField error={!!errors.title?.message} helperText={errors.title?.message} {...register('title')}
+                               placeholder="Write there a new future task"/>
+                    <TextField {...register('description')}
+                               placeholder="Write there a description for new future task"/>
+                </TodoFields>
                 <Button onClick={handleSubmit(onAddClick)} type='submit'>Add</Button>
-            </FormControl>
-            <Container sx={{
-                height: 'calc(100% - 56px)',
-                marginTop: '16px',
-                padding: '0 4px 0 0 !important',
-                overflowY: 'auto',
-                overflowX: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px'
-            }}>
-                {todos.map(todo => <TodoItem key={todo.id} todo={todo} onEdit={(title, description) => onEdit(todo, title, description)}
-                                             onFavorite={isFavorite => onFavorite(todo, isFavorite)}
-                                             onDelete={() => onDelete(todo)}/>)}
-            </Container>
-        </Container>
+            </TodoForm>
+            <Todos>
+                {todos.map(todo => <TodoItem key={todo.id} todo={todo} onEdit={onEdit}
+                                             onFavorite={onFavorite}
+                                             onDelete={onDelete}/>)}
+            </Todos>
+        </Wrapper>
     )
 }
 

@@ -11,11 +11,9 @@ export const theme = createTheme({
     },
     components: {
         MuiContainer: {
-            styleOverrides: {
-                root: {
-                    padding: '0 !important'
-                }
-            }
+            defaultProps: {
+                disableGutters: true,
+            },
         },
         MuiIconButton: {
             styleOverrides: {
