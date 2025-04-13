@@ -1,4 +1,4 @@
-import {Box, ButtonGroup, IconButton, TextField, Typography} from "@mui/material";
+import {Box, IconButton, TextField, Typography} from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DoneIcon from '@mui/icons-material/Done';
@@ -14,18 +14,27 @@ export interface Todo {
     isFavorite: boolean
 }
 
-const TodoItem = ({todo, onEvent}: {
+const TodoItem = ({todo, onEdit, onFavorite, onDelete}: {
     todo: Todo,
-    onEvent: (event: TodoItemEvent, value?: string | boolean) => void
+    onEdit: (title: string) => void
+    onFavorite: (isFavorite: boolean) => void
+    onDelete: () => void
 }) => {
     const [edit, setEdit] = useState(false)
     const [newTitle, setNewTitle] = useState(todo.title)
 
-    function handleEdit() {
-        if (edit) onEvent('EDIT', newTitle)
+    const handleTitle = (event: React.ChangeEvent<HTMLInputElement>) => setNewTitle(event.target.value)
 
-        setEdit(!edit)
+    const handleEdit = () => {
+        onEdit(newTitle)
+        toggleEdit()
     }
+
+    const handleFavorite = () => onFavorite(!todo.isFavorite)
+
+    const handleDelete = () => onDelete()
+
+    const toggleEdit = () => setEdit(!edit)
 
     return (
         <Box sx={{
@@ -35,19 +44,19 @@ const TodoItem = ({todo, onEvent}: {
             display: 'flex',
             alignItems: 'center'
         }}>
-            {edit ? <TextField value={newTitle} onChange={event => setNewTitle(event.target.value)}/> :
+            {edit ? <TextField value={newTitle} onChange={handleTitle}/> :
                 <Typography sx={{
                     flex: '1',
                     overflowX: 'hidden',
                     textOverflow: 'ellipsis'
                 }}>{todo.title}</Typography>}
-            <IconButton onClick={handleEdit}>
+            <IconButton onClick={edit ? handleEdit : toggleEdit}>
                 {edit ? <DoneIcon fontSize="small"/> : <EditOutlinedIcon fontSize="small"/>}
             </IconButton>
-            <IconButton onClick={() => onEvent('FAVORITE', !todo.isFavorite)}>
+            <IconButton onClick={handleFavorite}>
                 {todo.isFavorite ? <FavoriteIcon fontSize="small"/> : <FavoriteBorderIcon fontSize="small"/>}
             </IconButton>
-            <IconButton onClick={() => onEvent('DELETE')}>
+            <IconButton onClick={handleDelete}>
                 <ClearIcon fontSize="small"/>
             </IconButton>
         </Box>
