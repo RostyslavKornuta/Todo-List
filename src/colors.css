@@ -1,0 +1,26 @@
+:root {
+    --bg-primary: #111113;
+    --bg-secondary: #18191B;
+    --bg-input: #0D0D0E;
+    --bg-teal: #0E2C38;
+    --bg-purple: #18244B;
+    --bg-pink: #381527;
+    --bg-amber: #331E10;
+    --fg-primary: #FFFFFF;
+    --fg-secondary: #B0B4BA;
+    --fg-tetriary: #5A6169;
+    --fg-green: #21BC59;
+    --fg-teal: #52E1FE;
+    --fg-red: #E43D42;
+    --fg-pink: #FF92AD;
+    --fg-orange: #DA860D;
+    --fg-blue: #5AADFF;
+    --fg-yellow: #D8BA46;
+    --fg-indigo: #829BFF;
+    --fg-coral: #E9763C;
+    --fg-purple: #9EB1FF;
+    --fg-amber: #FFA057;
+    --fg-button-secondary: #B0B4BA;
+    --accent-default: #3E63DD;
+    --border: #3C4146;
+}
