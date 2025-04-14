@@ -1,0 +1,20 @@
+[
+  {
+    "id": 0,
+    "title": "First Todo",
+    "description": "Test Description",
+    "isFavorite": false
+  },
+  {
+    "id": 1,
+    "title": "Second Todo",
+    "description": "Test Description 2",
+    "isFavorite": false
+  },
+  {
+    "id": 2,
+    "title": "Third Todo",
+    "description": "Test Description 3",
+    "isFavorite": false
+  }
+]

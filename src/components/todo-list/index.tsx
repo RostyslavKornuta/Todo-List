@@ -1,6 +1,6 @@
 import TodoItem, {Todo} from "./todo-item";
 import {Button, Container, FormControl, TextField} from "@mui/material";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -45,13 +45,8 @@ const TodoForm = styled(FormControl)`
     gap: 8px
 `;
 
-const TodoList = () => {
-    const [todos, setTodos] = useState<Array<Todo>>([{
-        id: 0,
-        title: 'First Todo',
-        description: 'Test Description',
-        isFavorite: false
-    }])
+const TodoList = ({ fetchedTodos }: { fetchedTodos: Array<Todo> }) => {
+    const [todos, setTodos] = useState<Array<Todo>>(fetchedTodos || [])
     const {
         register,
         handleSubmit,
